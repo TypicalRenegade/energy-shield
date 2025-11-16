@@ -1,0 +1,984 @@
+[gd_scene load_steps=57 format=3 uid="uid://dxsh3qaq5goq"]
+
+[ext_resource type="Script" uid="uid://f1263sbcv8qy" path="res://addons/nojoule-energy-shield/camera_movement.gd" id="1_l31ql"]
+[ext_resource type="PackedScene" uid="uid://bvqb5fugcfm5k" path="res://addons/nojoule-energy-shield/shield_plane.tscn" id="2_8awbq"]
+[ext_resource type="Shader" uid="uid://dcko35tc4k343" path="res://addons/nojoule-energy-shield/shield.gdshader" id="3_ki0k0"]
+[ext_resource type="Texture2D" uid="uid://dnqegf8mxqli" path="res://addons/nojoule-energy-shield/shield_noise.tres" id="4_ioy8y"]
+[ext_resource type="PackedScene" uid="uid://bqo3es5yd4r70" path="res://addons/nojoule-energy-shield/shield_sphere.tscn" id="5_7nqdb"]
+[ext_resource type="PackedScene" uid="uid://dd146l0thx0ep" path="res://addons/nojoule-energy-shield/shield_large_plane.tscn" id="6_4741m"]
+
+[sub_resource type="Environment" id="Environment_nl0ma"]
+background_mode = 1
+background_color = Color(0.0863636, 0.0863636, 0.0863636, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.2, 0.2, 0.2, 1)
+glow_enabled = true
+glow_mix = 0.01
+glow_blend_mode = 4
+
+[sub_resource type="GDScript" id="GDScript_iiy7r"]
+script/source = "@tool
+extends Node3D
+
+var rotation_speed: float = 45.0
+
+#@onready var sphere: MeshInstance3D = $ShieldSphere
+#@onready var plane: MeshInstance3D = $ShieldPlane
+
+func _process(delta: float) -> void:
+	pass
+	#sphere.rotate(Vector3.UP, deg_to_rad(rotation_speed * delta))
+	#plane.rotate(Vector3.UP, deg_to_rad(rotation_speed * delta))
+"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7wpux"]
+albedo_color = Color(0.4, 0.4, 0.4, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_f5biq"]
+material = SubResource("StandardMaterial3D_7wpux")
+size = Vector2(4, 1)
+orientation = 1
+
+[sub_resource type="Image" id="Image_l31ql"]
+data = {
+"data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+"format": "RGBAFloat",
+"height": 2,
+"mipmaps": false,
+"width": 1
+}
+
+[sub_resource type="ImageTexture" id="ImageTexture_8awbq"]
+image = SubResource("Image_l31ql")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tkmln"]
+render_priority = 0
+shader = ExtResource("3_ki0k0")
+shader_parameter/_quantization = false
+shader_parameter/_steps_quantization = 5
+shader_parameter/_object_scale = 4.0
+shader_parameter/_object_size = 4.0
+shader_parameter/_only_on_wave_visibility = false
+shader_parameter/_start_falloff_visibility = 0.5
+shader_parameter/_end_falloff_visibility = 0.3
+shader_parameter/_time_multiplier_activation = 1.0
+shader_parameter/_distance_multiplier_activation = 1.0
+shader_parameter/_width_time_activation = 1.0
+shader_parameter/_enable_highlight_intersection = true
+shader_parameter/_width_highlight_intersection = 1.0
+shader_parameter/_noise_texture = ExtResource("4_ioy8y")
+shader_parameter/_speed_noise = Vector2(0.02, 0.02)
+shader_parameter/_origin_generate = Vector3(0, 0.5, 0)
+shader_parameter/_relative_origin_generate = true
+shader_parameter/_time_generate = 1.0
+shader_parameter/_thickness_generate = 0.25
+shader_parameter/_collapse = false
+shader_parameter/_color_shield = Color(0.26, 0.975, 1, 1)
+shader_parameter/_color_brightness_shield = 15.0
+shader_parameter/_intensity_shield = 3.0
+shader_parameter/glow_enabled = true
+shader_parameter/glow_strength = 10.0
+shader_parameter/_active_static = false
+shader_parameter/_origin_static = Vector3(0, 0, 0)
+shader_parameter/_speed_static = 0.1
+shader_parameter/_frequency_static = 80.0
+shader_parameter/_amplitude_static = 0.002
+shader_parameter/_normal_amplitude_static = 0.002
+shader_parameter/_effect_radius_static = 1.2
+shader_parameter/_active_static_offset_hl = true
+shader_parameter/_strength_static_offset_hl = 1.0
+shader_parameter/_intensity_static_offset_hl = 5.0
+shader_parameter/_relative_origin_static = true
+shader_parameter/_impact_texture = SubResource("ImageTexture_8awbq")
+shader_parameter/max_impacts = 1
+shader_parameter/_frequency_impact = 20.0
+shader_parameter/_waves_impact = 0.0
+shader_parameter/_fade_waves_impact = 2.0
+shader_parameter/_amplitude_impact = 0.02
+shader_parameter/_normal_amplitude_impact = 0.05
+shader_parameter/_radius_impact = 1.0
+shader_parameter/_active_impact_offset_hl = true
+shader_parameter/_strength_impact_offset_hl = 1.0
+shader_parameter/_intensity_impact_offset_hl = 5.0
+shader_parameter/_relative_origin_impact = true
+shader_parameter/_active_border = true
+shader_parameter/_intensity_border = 2.0
+shader_parameter/_percentage_border = 0.1
+shader_parameter/_show_normals = false
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_m4u1x"]
+resource_local_to_scene = true
+material = SubResource("ShaderMaterial_tkmln")
+size = Vector2(1, 1)
+subdivide_width = 256
+subdivide_depth = 256
+
+[sub_resource type="GDScript" id="GDScript_ok5g2"]
+script/source = "@tool
+extends \"res://addons/nojoule-energy-shield/shield.gd\"
+"
+
+[sub_resource type="Curve" id="Curve_ftut7"]
+resource_local_to_scene = true
+resource_name = "animation_curve"
+_data = [Vector2(0, 0), 0.0, 2.60088, 0, 0, Vector2(0.996183, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="BoxMesh" id="BoxMesh_ftut7"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_m4u1x"]
+points = PackedVector3Array(-0.049999997, -0.04999998, -0.04999998, 0.049997684, 0.049999997, 0.049999997, 0.049997684, 0.049999997, -0.049999997, 0.049997684, -0.049999997, 0.049999997, -0.049999997, 0.04999998, 0.04999998, 0.049997684, -0.049999997, -0.049999997, -0.049999997, 0.04999998, -0.04999998, -0.049999997, -0.04999998, 0.04999998)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tkmln"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ukj8r"]
+points = PackedVector3Array(-0.25, -0.25, -0.25, 0.25, 0.25, 0.25, 0.25, -0.25, 0.25, 0.25, 0.25, -0.25, -0.25, 0.25, 0.25, 0.25, -0.25, -0.25, -0.25, -0.25, 0.25, -0.25, 0.25, -0.25)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ebi6u"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ok5g2"]
+
+[sub_resource type="Image" id="Image_ki0k0"]
+data = {
+"data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+"format": "RGBAFloat",
+"height": 2,
+"mipmaps": false,
+"width": 1
+}
+
+[sub_resource type="ImageTexture" id="ImageTexture_ioy8y"]
+image = SubResource("Image_ki0k0")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ftut7"]
+render_priority = 0
+shader = ExtResource("3_ki0k0")
+shader_parameter/_quantization = false
+shader_parameter/_steps_quantization = 5
+shader_parameter/_object_scale = 3.0
+shader_parameter/_object_size = 3.0
+shader_parameter/_only_on_wave_visibility = false
+shader_parameter/_start_falloff_visibility = 0.5
+shader_parameter/_end_falloff_visibility = 0.3
+shader_parameter/_time_multiplier_activation = 1.0
+shader_parameter/_distance_multiplier_activation = 1.0
+shader_parameter/_width_time_activation = 1.0
+shader_parameter/_enable_highlight_intersection = true
+shader_parameter/_width_highlight_intersection = 1.0
+shader_parameter/_noise_texture = ExtResource("4_ioy8y")
+shader_parameter/_speed_noise = Vector2(0.02, 0.02)
+shader_parameter/_origin_generate = Vector3(0, 0.5, 0)
+shader_parameter/_relative_origin_generate = true
+shader_parameter/_time_generate = 1.0
+shader_parameter/_thickness_generate = 0.25
+shader_parameter/_collapse = false
+shader_parameter/_color_shield = Color(0.26, 0.975, 1, 1)
+shader_parameter/_color_brightness_shield = 15.0
+shader_parameter/_intensity_shield = 3.0
+shader_parameter/glow_enabled = true
+shader_parameter/glow_strength = 0.1
+shader_parameter/_active_static = false
+shader_parameter/_origin_static = Vector3(0, 0.5, 0)
+shader_parameter/_speed_static = 0.1
+shader_parameter/_frequency_static = 80.0
+shader_parameter/_amplitude_static = 0.002
+shader_parameter/_normal_amplitude_static = 0.002
+shader_parameter/_effect_radius_static = 1.2
+shader_parameter/_active_static_offset_hl = true
+shader_parameter/_strength_static_offset_hl = 1.0
+shader_parameter/_intensity_static_offset_hl = 5.0
+shader_parameter/_relative_origin_static = true
+shader_parameter/_impact_texture = SubResource("ImageTexture_ioy8y")
+shader_parameter/max_impacts = 1
+shader_parameter/_frequency_impact = 20.0
+shader_parameter/_waves_impact = 0.0
+shader_parameter/_fade_waves_impact = 2.0
+shader_parameter/_amplitude_impact = 0.02
+shader_parameter/_normal_amplitude_impact = 0.05
+shader_parameter/_radius_impact = 1.0
+shader_parameter/_active_impact_offset_hl = true
+shader_parameter/_strength_impact_offset_hl = 1.0
+shader_parameter/_intensity_impact_offset_hl = 5.0
+shader_parameter/_relative_origin_impact = true
+shader_parameter/_active_border = false
+shader_parameter/_intensity_border = 2.0
+shader_parameter/_percentage_border = 0.1
+shader_parameter/_show_normals = false
+
+[sub_resource type="SphereMesh" id="SphereMesh_ukj8r"]
+resource_local_to_scene = true
+material = SubResource("ShaderMaterial_ftut7")
+radial_segments = 256
+rings = 256
+
+[sub_resource type="GDScript" id="GDScript_ukj8r"]
+script/source = "@tool
+extends \"res://addons/nojoule-energy-shield/shield.gd\"
+"
+
+[sub_resource type="Curve" id="Curve_65qv3"]
+resource_local_to_scene = true
+resource_name = "animation_curve"
+_data = [Vector2(0, 0), 0.0, 2.60088, 0, 0, Vector2(0.996183, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Image" id="Image_7nqdb"]
+data = {
+"data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+"format": "RGBAFloat",
+"height": 2,
+"mipmaps": false,
+"width": 1
+}
+
+[sub_resource type="ImageTexture" id="ImageTexture_4741m"]
+image = SubResource("Image_7nqdb")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ukj8r"]
+render_priority = 0
+shader = ExtResource("3_ki0k0")
+shader_parameter/_quantization = false
+shader_parameter/_steps_quantization = 5
+shader_parameter/_object_scale = 3.0
+shader_parameter/_object_size = 1.0
+shader_parameter/_only_on_wave_visibility = false
+shader_parameter/_start_falloff_visibility = 0.5
+shader_parameter/_end_falloff_visibility = 0.3
+shader_parameter/_time_multiplier_activation = 2.0
+shader_parameter/_distance_multiplier_activation = 1.0
+shader_parameter/_width_time_activation = 0.2
+shader_parameter/_enable_highlight_intersection = true
+shader_parameter/_width_highlight_intersection = 1.0
+shader_parameter/_noise_texture = ExtResource("4_ioy8y")
+shader_parameter/_speed_noise = Vector2(0.02, 0.02)
+shader_parameter/_origin_generate = Vector3(0, 0.5, 0)
+shader_parameter/_relative_origin_generate = true
+shader_parameter/_time_generate = 1.0
+shader_parameter/_thickness_generate = 0.25
+shader_parameter/_collapse = false
+shader_parameter/_color_shield = Color(0.26, 0.975, 1, 1)
+shader_parameter/_color_brightness_shield = 15.0
+shader_parameter/_intensity_shield = 3.0
+shader_parameter/glow_enabled = true
+shader_parameter/glow_strength = 0.1
+shader_parameter/_active_static = false
+shader_parameter/_origin_static = Vector3(0, 0.5, 0)
+shader_parameter/_speed_static = 0.1
+shader_parameter/_frequency_static = 80.0
+shader_parameter/_amplitude_static = 0.002
+shader_parameter/_normal_amplitude_static = 0.002
+shader_parameter/_effect_radius_static = 1.2
+shader_parameter/_active_static_offset_hl = true
+shader_parameter/_strength_static_offset_hl = 1.0
+shader_parameter/_intensity_static_offset_hl = 5.0
+shader_parameter/_relative_origin_static = true
+shader_parameter/_impact_texture = SubResource("ImageTexture_4741m")
+shader_parameter/max_impacts = 1
+shader_parameter/_frequency_impact = 20.0
+shader_parameter/_waves_impact = 0.0
+shader_parameter/_fade_waves_impact = 2.0
+shader_parameter/_amplitude_impact = 0.02
+shader_parameter/_normal_amplitude_impact = 0.05
+shader_parameter/_radius_impact = 1.0
+shader_parameter/_active_impact_offset_hl = true
+shader_parameter/_strength_impact_offset_hl = 1.0
+shader_parameter/_intensity_impact_offset_hl = 5.0
+shader_parameter/_relative_origin_impact = false
+shader_parameter/_active_border = false
+shader_parameter/_intensity_border = 2.0
+shader_parameter/_percentage_border = 0.1
+shader_parameter/_show_normals = false
+
+[sub_resource type="SphereMesh" id="SphereMesh_65qv3"]
+resource_local_to_scene = true
+material = SubResource("ShaderMaterial_ukj8r")
+radius = 1.5
+height = 3.0
+radial_segments = 256
+rings = 256
+
+[sub_resource type="GDScript" id="GDScript_xrw65"]
+script/source = "@tool
+extends \"res://addons/nojoule-energy-shield/shield.gd\"
+"
+
+[sub_resource type="Curve" id="Curve_ahtcd"]
+resource_local_to_scene = true
+resource_name = "animation_curve"
+_data = [Vector2(0, 0), 0.0, 2.60088, 0, 0, Vector2(0.996183, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ukj8r"]
+radius = 1.5
+
+[sub_resource type="GDScript" id="GDScript_ftut7"]
+script/source = "@tool
+extends Node3D
+
+var rotation_speed: float = 45.0
+
+var amplitude: float = 0.5
+var frequency: float = 0.2
+var time_passed: float = 0.0
+var initial_position: Vector3 = Vector3(0.75, 0.6, 0.0)
+
+@onready var sphere: MeshInstance3D = $ShieldSphere
+@onready var plane: MeshInstance3D = $ShieldPlane
+@onready var moving_box: MeshInstance3D = $EnvironmentMovingPlatform
+
+#func _process(delta: float):
+	#if moving_box:
+		#time_passed += delta
+		#var y_offset = amplitude * sin(time_passed * frequency * TAU)
+		#moving_box.transform.origin = initial_position + Vector3(0, y_offset, 0)
+#
+	#plane.rotate(Vector3.UP, deg_to_rad(rotation_speed * delta))
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mpt4m"]
+render_priority = 0
+shader = ExtResource("3_ki0k0")
+shader_parameter/_quantization = true
+shader_parameter/_steps_quantization = 5
+shader_parameter/_object_scale = 1.0
+shader_parameter/_object_size = 1.0
+shader_parameter/_only_on_wave_visibility = false
+shader_parameter/_start_falloff_visibility = 0.5
+shader_parameter/_end_falloff_visibility = 0.3
+shader_parameter/_time_multiplier_activation = 1.0
+shader_parameter/_distance_multiplier_activation = 1.0
+shader_parameter/_width_time_activation = 1.0
+shader_parameter/_enable_highlight_intersection = true
+shader_parameter/_width_highlight_intersection = 1.0
+shader_parameter/_noise_texture = ExtResource("4_ioy8y")
+shader_parameter/_speed_noise = Vector2(0.02, 0.02)
+shader_parameter/_origin_generate = Vector3(0, 0.5, 0)
+shader_parameter/_relative_origin_generate = true
+shader_parameter/_time_generate = 1.0
+shader_parameter/_thickness_generate = 0.25
+shader_parameter/_collapse = false
+shader_parameter/_color_shield = Color(0.26, 0.975, 1, 1)
+shader_parameter/_color_brightness_shield = 15.0
+shader_parameter/_intensity_shield = 2.5
+shader_parameter/glow_enabled = true
+shader_parameter/glow_strength = 1.0
+shader_parameter/_active_static = false
+shader_parameter/_origin_static = Vector3(0, 0.5, 0)
+shader_parameter/_speed_static = 0.1
+shader_parameter/_frequency_static = 80.0
+shader_parameter/_amplitude_static = 0.002
+shader_parameter/_normal_amplitude_static = 0.002
+shader_parameter/_effect_radius_static = 1.2
+shader_parameter/_active_static_offset_hl = true
+shader_parameter/_strength_static_offset_hl = 1.0
+shader_parameter/_intensity_static_offset_hl = 5.0
+shader_parameter/_relative_origin_static = true
+shader_parameter/max_impacts = 1
+shader_parameter/_frequency_impact = 20.0
+shader_parameter/_waves_impact = 0.0
+shader_parameter/_fade_waves_impact = 2.0
+shader_parameter/_amplitude_impact = 0.02
+shader_parameter/_normal_amplitude_impact = 0.05
+shader_parameter/_radius_impact = 1.0
+shader_parameter/_active_impact_offset_hl = true
+shader_parameter/_strength_impact_offset_hl = 1.0
+shader_parameter/_intensity_impact_offset_hl = 5.0
+shader_parameter/_relative_origin_impact = false
+shader_parameter/_active_border = false
+shader_parameter/_intensity_border = 2.0
+shader_parameter/_percentage_border = 0.1
+shader_parameter/_show_normals = false
+
+[sub_resource type="SphereMesh" id="SphereMesh_ftut7"]
+resource_local_to_scene = true
+material = SubResource("ShaderMaterial_mpt4m")
+radial_segments = 256
+rings = 256
+
+[sub_resource type="Curve" id="Curve_m4u1x"]
+resource_local_to_scene = true
+resource_name = "animation_curve"
+_data = [Vector2(0, 0), 0.0, 2.60088, 0, 0, Vector2(0.996183, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="SphereMesh" id="SphereMesh_m4u1x"]
+radius = 0.2
+height = 0.4
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_tkmln"]
+radius = 0.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_64ak4"]
+render_priority = 0
+shader = ExtResource("3_ki0k0")
+shader_parameter/_quantization = true
+shader_parameter/_steps_quantization = 5
+shader_parameter/_object_scale = 1.0
+shader_parameter/_object_size = 1.8
+shader_parameter/_only_on_wave_visibility = false
+shader_parameter/_start_falloff_visibility = 0.5
+shader_parameter/_end_falloff_visibility = 0.3
+shader_parameter/_time_multiplier_activation = 1.0
+shader_parameter/_distance_multiplier_activation = 1.0
+shader_parameter/_width_time_activation = 1.0
+shader_parameter/_enable_highlight_intersection = true
+shader_parameter/_width_highlight_intersection = 1.0
+shader_parameter/_noise_texture = ExtResource("4_ioy8y")
+shader_parameter/_speed_noise = Vector2(0.02, 0.02)
+shader_parameter/_origin_generate = Vector3(0, 0.5, 0)
+shader_parameter/_relative_origin_generate = true
+shader_parameter/_time_generate = 1.0
+shader_parameter/_thickness_generate = 0.25
+shader_parameter/_collapse = false
+shader_parameter/_color_shield = Color(0.26, 0.975, 1, 1)
+shader_parameter/_color_brightness_shield = 15.0
+shader_parameter/_intensity_shield = 2.5
+shader_parameter/glow_enabled = true
+shader_parameter/glow_strength = 1.0
+shader_parameter/_active_static = false
+shader_parameter/_origin_static = Vector3(0, 0, 0)
+shader_parameter/_speed_static = 0.1
+shader_parameter/_frequency_static = 80.0
+shader_parameter/_amplitude_static = 0.002
+shader_parameter/_normal_amplitude_static = 0.002
+shader_parameter/_effect_radius_static = 1.2
+shader_parameter/_active_static_offset_hl = true
+shader_parameter/_strength_static_offset_hl = 1.0
+shader_parameter/_intensity_static_offset_hl = 5.0
+shader_parameter/_relative_origin_static = true
+shader_parameter/max_impacts = 1
+shader_parameter/_frequency_impact = 20.0
+shader_parameter/_waves_impact = 0.0
+shader_parameter/_fade_waves_impact = 2.0
+shader_parameter/_amplitude_impact = 0.02
+shader_parameter/_normal_amplitude_impact = 0.05
+shader_parameter/_radius_impact = 1.0
+shader_parameter/_active_impact_offset_hl = true
+shader_parameter/_strength_impact_offset_hl = 1.0
+shader_parameter/_intensity_impact_offset_hl = 5.0
+shader_parameter/_relative_origin_impact = false
+shader_parameter/_active_border = true
+shader_parameter/_intensity_border = 2.0
+shader_parameter/_percentage_border = 0.2
+shader_parameter/_show_normals = false
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_tkmln"]
+resource_local_to_scene = true
+material = SubResource("ShaderMaterial_64ak4")
+size = Vector2(1, 1)
+subdivide_width = 128
+subdivide_depth = 128
+
+[sub_resource type="Curve" id="Curve_ukj8r"]
+resource_local_to_scene = true
+resource_name = "animation_curve"
+_data = [Vector2(0, 0), 0.0, 2.60088, 0, 0, Vector2(0.996183, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="SphereMesh" id="SphereMesh_7cs7f"]
+radius = 0.2
+height = 0.4
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ftut7"]
+radius = 0.20230041
+
+[sub_resource type="BoxMesh" id="BoxMesh_qsywp"]
+size = Vector3(0.3, 0.3, 0.3)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_65qv3"]
+points = PackedVector3Array(0.15, 0.15, 0.15, 0.15, 0.15, -0.15, -0.15, 0.15, 0.15, 0.15, -0.15, 0.15, 0.15, -0.15, -0.15, -0.15, 0.15, -0.15, -0.15, -0.15, 0.15, -0.15, -0.15, -0.15)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8tyb0"]
+size = Vector3(1.1, 0.1, 1.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ftut7"]
+size = Vector3(1.09729, 0.09661865, 1)
+
+[sub_resource type="GDScript" id="GDScript_ebi6u"]
+script/source = "@tool
+extends Node3D
+
+
+# --------------- Signals ----------------------
+#signal
+# ---------------- Enums -----------------------
+#enum
+# -------------- Constants ---------------------
+#const
+# --------------- Exports ----------------------
+## The shield node that this script affects.
+@export var plane_node: MeshInstance3D = null
+## Max amount of rain drops in each burst. Accual value is randomized 
+## value that has a max of this value.
+@export var drops_in_burst: int = 20
+## Max time between drops in each burst. Accual value is randomized value
+## that has a max of this value.
+@export var max_time: float = 0.05
+## The change of a batch of rain drops to start falling on the shield 
+## each frame.
+@export_range(0.001, 1.0, 0.001) var rain_burst_chance: float = 0.5
+# -------------- Variables ---------------------
+var plane_size: Vector2 = Vector2.ZERO
+var raining := false
+# --------------- Onready ----------------------
+#@onready
+
+
+# ------------ Process Functions -----------------
+func _ready() -> void:
+	plane_size.x = plane_node.mesh.size.x * plane_node.scale.x
+	plane_size.y = plane_node.mesh.size.y * plane_node.scale.y
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	if not raining and randf() < rain_burst_chance:
+		raining = true
+		_rain()
+
+
+#func _physics_process(delta: float) -> void:
+	#pass
+
+
+# ------------ Private Functions -----------------
+func _rain() -> void:
+	var rain: int = randi_range(drops_in_burst * 0.1, drops_in_burst)
+	for drop in rain:
+		await get_tree().create_timer(randf_range(max_time * 0.001, max_time)).timeout
+		var offset: Vector3 = Vector3.ZERO
+		offset.x = randf_range(-plane_size.x, plane_size.x)
+		offset.y = randf_range(-plane_size.y, plane_size.y)
+		var drop_pos: Vector3 = plane_node.global_position + offset
+		plane_node.impact(drop_pos, null)
+	raining = false
+
+
+# ------------ Public Functions -----------------
+#func example() -> void:
+	#pass
+"
+
+[sub_resource type="Image" id="Image_s3lef"]
+data = {
+"data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 176, 199, 42, 62, 0, 0, 0, 50, 128, 246, 207, 61, 69, 195, 10, 63, 200, 135, 208, 190, 0, 0, 0, 178, 88, 28, 105, 190, 190, 1, 48, 63, 176, 226, 6, 62, 0, 0, 0, 0, 108, 183, 138, 61, 199, 111, 104, 63, 228, 37, 92, 191, 0, 0, 0, 0, 96, 150, 223, 188, 12, 251, 187, 62, 0, 34, 177, 189, 0, 0, 0, 50, 240, 241, 199, 61, 199, 113, 113, 63, 0, 49, 8, 60, 0, 0, 128, 178, 246, 221, 149, 190, 246, 101, 89, 63, 160, 214, 107, 63, 0, 0, 0, 0, 72, 205, 49, 61, 51, 219, 56, 63, 80, 237, 158, 62, 0, 0, 0, 179, 139, 148, 56, 191, 77, 154, 50, 63, 176, 34, 34, 62, 0, 0, 192, 50, 190, 18, 235, 62, 133, 68, 101, 63, 240, 86, 251, 62, 0, 0, 0, 178, 152, 124, 46, 190, 117, 177, 75, 63, 84, 241, 117, 191, 0, 0, 0, 51, 201, 109, 63, 63, 87, 79, 126, 63, 32, 15, 118, 63, 0, 0, 0, 179, 167, 10, 65, 191, 96, 184, 87, 63, 192, 186, 220, 62, 0, 0, 0, 50, 108, 226, 230, 61, 0, 0, 128, 63, 160, 180, 64, 63, 0, 0, 192, 50, 6, 201, 2, 63, 127, 69, 28, 63, 96, 7, 34, 190, 0, 0, 32, 51, 3, 134, 103, 63, 193, 22, 192, 62, 72, 64, 66, 63, 0, 0, 128, 178, 216, 226, 206, 190, 175, 111, 126, 63, 0, 82, 104, 191, 0, 0, 0, 51, 70, 192, 38, 63, 99, 20, 235, 62, 192, 33, 52, 63, 0, 0, 0, 51, 73, 129, 54, 63, 240, 161, 72, 63, 160, 165, 35, 190, 0, 0, 32, 179, 239, 18, 100, 191, 134, 200, 122, 63, 88, 109, 64, 63, 0, 0, 0, 50, 20, 206, 84, 62, 130, 243, 127, 63, 40, 207, 177, 190, 0, 0, 128, 50, 152, 24, 213, 62, 0, 0, 0, 0, 136, 222, 76, 191, 0, 0, 0, 0, 192, 135, 5, 188, 23, 67, 31, 63, 56, 179, 21, 191, 0, 0, 0, 178, 80, 96, 62, 190, 194, 252, 126, 63, 128, 87, 103, 191, 0, 0, 192, 178, 229, 65, 21, 191, 55, 24, 107, 62, 16, 10, 124, 63, 0, 0, 32, 179, 133, 175, 90, 191, 112, 87, 59, 62, 56, 76, 197, 190, 0, 0, 0, 0, 112, 10, 25, 189, 211, 209, 19, 62, 248, 37, 102, 63, 0, 0, 0, 50, 197, 200, 130, 62, 60, 170, 73, 63, 96, 252, 121, 62, 0, 0, 128, 178, 220, 5, 212, 190, 12, 118, 69, 63, 128, 107, 165, 62, 0, 0, 192, 178, 7, 26, 17, 191, 0, 0, 0, 0, 56, 203, 82, 63, 0, 0, 128, 50, 72, 92, 200, 62, 254, 118, 149, 62, 208, 252, 219, 190, 0, 0, 0, 178, 224, 61, 94, 190, 85, 157, 162, 62, 192, 130, 17, 191, 0, 0, 64, 51, 50, 183, 123, 63, 167, 137, 20, 63, 28, 212, 100, 191, 0, 0, 192, 50, 216, 196, 7, 63, 94, 68, 125, 63, 200, 190, 161, 190, 0, 0, 192, 50, 85, 1, 248, 62, 146, 139, 127, 63, 224, 194, 249, 62, 0, 0, 0, 50, 92, 243, 93, 62, 144, 109, 116, 62, 100, 243, 115, 191, 0, 0, 0, 50, 156, 245, 1, 62, 114, 255, 127, 63, 192, 18, 169, 61, 0, 0, 192, 178, 166, 55, 232, 190, 91, 151, 120, 63, 48, 147, 73, 191, 0, 0, 192, 50, 60, 47, 235, 62, 118, 166, 119, 63, 0, 115, 255, 61, 0, 0, 192, 178, 195, 162, 3, 191, 69, 187, 124, 63, 48, 120, 121, 62, 0, 0, 128, 50, 250, 29, 185, 62, 246, 36, 53, 63, 248, 138, 107, 63, 0, 0, 0, 0, 112, 77, 140, 60, 152, 144, 88, 63, 16, 93, 81, 63, 0, 0, 128, 178, 26, 110, 213, 190, 96, 1, 109, 63, 0, 118, 34, 63, 0, 0, 32, 179, 229, 104, 85, 191, 102, 199, 62, 63, 248, 113, 4, 191, 0, 0, 128, 178, 216, 178, 132, 190, 98, 119, 121, 63, 224, 193, 87, 190, 0, 0, 192, 50, 98, 170, 11, 63, 200, 255, 135, 62, 240, 11, 31, 191, 0, 0, 128, 50, 174, 2, 151, 62, 151, 141, 80, 63, 200, 213, 14, 63, 0, 0, 0, 179, 15, 73, 57, 191, 0, 71, 122, 63, 192, 165, 88, 63, 0, 0, 32, 51, 99, 242, 97, 63, 8, 63, 99, 63, 136, 101, 66, 191, 0, 0, 0, 51, 40, 27, 66, 63, 24, 206, 116, 63, 40, 183, 125, 191, 0, 0, 0, 179, 51, 175, 59, 191, 143, 56, 106, 63, 0, 194, 117, 63, 0, 0, 0, 179, 227, 13, 43, 191, 209, 72, 67, 63, 228, 77, 85, 191, 0, 0, 32, 51, 143, 241, 72, 63, 220, 223, 127, 63, 176, 244, 223, 62, 0, 0, 32, 179, 23, 2, 69, 191, 253, 42, 94, 63, 192, 167, 237, 61, 0, 0, 192, 50, 102, 199, 248, 62, 15, 155, 127, 63, 208, 25, 59, 63, 0, 0, 0, 0, 160, 98, 167, 61, 219, 50, 103, 63, 100, 91, 103, 191, 0, 0, 0, 178, 132, 244, 88, 190, 207, 125, 123, 63, 16, 153, 13, 63, 0, 0, 0, 50, 8, 89, 243, 61, 117, 251, 127, 63, 136, 59, 62, 191, 0, 0, 192, 178, 139, 117, 5, 191, 214, 182, 123, 63, 96, 218, 5, 191, 0, 0, 128, 178, 134, 231, 162, 190, 112, 203, 234, 61, 32, 27, 148, 62, 0, 0, 0, 179, 27, 251, 33, 191, 76, 30, 246, 62, 64, 167, 144, 190, 0, 0, 32, 51, 189, 57, 95, 63, 54, 144, 117, 63, 176, 206, 231, 190, 0, 0, 128, 178, 86, 45, 182, 190, 145, 210, 103, 63, 152, 131, 181, 190, 0, 0, 0, 50, 200, 37, 122, 62, 89, 111, 0, 63, 0, 161, 134, 188, 0, 0, 192, 178, 22, 121, 225, 190, 22, 67, 123, 63, 60, 8, 94, 191, 0, 0, 0, 51, 222, 98, 57, 63, 198, 83, 83, 63, 144, 211, 52, 191, 0, 0, 192, 178, 127, 72, 3, 191, 222, 92, 107, 63, 0, 154, 34, 62, 0, 0, 64, 179, 151, 194, 115, 191, 248, 87, 124, 63, 216, 241, 15, 63, 0, 0, 128, 50, 39, 221, 170, 62, 244, 2, 145, 62, 120, 132, 1, 63, 0, 0, 0, 50, 20, 223, 20, 62, 132, 182, 127, 63, 64, 11, 41, 191, 0, 0, 0, 179, 21, 64, 63, 191, 75, 172, 77, 63, 48, 120, 232, 62, 0, 0, 0, 179, 71, 160, 47, 191, 147, 2, 44, 63, 192, 22, 213, 190, 0, 0, 32, 51, 16, 106, 107, 63, 228, 171, 95, 63, 160, 161, 190, 189, 0, 0, 192, 178, 175, 152, 1, 191, 64, 195, 3, 61, 240, 244, 39, 190, 0, 0, 192, 178, 218, 141, 219, 190, 222, 161, 55, 63, 168, 145, 125, 63, 0, 0, 0, 51, 153, 173, 49, 63, 243, 114, 60, 63, 104, 105, 32, 191, 0, 0, 192, 50, 130, 245, 22, 63, 120, 152, 172, 61, 236, 189, 10, 191, 0, 0, 32, 51, 197, 236, 110, 63, 160, 142, 126, 63, 192, 100, 188, 61, 0, 0, 0, 0, 224, 22, 161, 188, 221, 57, 255, 61, 224, 71, 76, 191, 0, 0, 192, 50, 132, 150, 232, 62, 94, 11, 112, 63, 160, 157, 144, 62, 0, 0, 0, 50, 224, 248, 22, 62, 59, 171, 5, 63, 208, 103, 55, 63, 0, 0, 0, 178, 84, 14, 68, 190, 243, 20, 14, 63, 144, 223, 96, 190, 0, 0, 0, 50, 8, 38, 2, 62, 35, 54, 204, 62, 128, 74, 144, 62, 0, 0, 32, 179, 247, 173, 75, 191, 254, 104, 127, 63, 136, 7, 135, 62, 0, 0, 128, 50, 249, 81, 199, 62, 105, 196, 114, 63, 192, 100, 173, 190, 0, 0, 0, 50, 102, 113, 49, 62, 12, 213, 91, 63, 96, 29, 97, 63, 0, 0, 128, 178, 114, 245, 190, 190, 156, 240, 3, 63, 48, 9, 233, 62, 0, 0, 0, 0, 0, 209, 249, 188, 97, 227, 39, 63, 32, 170, 249, 62, 0, 0, 0, 0, 128, 57, 49, 189, 244, 33, 97, 63, 64, 162, 161, 61, 0, 0, 32, 51, 213, 248, 101, 63, 224, 97, 7, 63, 112, 22, 243, 62, 0, 0, 64, 179, 163, 46, 121, 191, 180, 163, 35, 63, 208, 156, 66, 62, 0, 0, 192, 50, 117, 2, 241, 62, 238, 183, 15, 63, 232, 126, 61, 191, 0, 0, 192, 178, 183, 139, 17, 191, 184, 3, 116, 63, 72, 136, 78, 63, 0, 0, 128, 178, 218, 79, 176, 190, 99, 146, 49, 62, 160, 115, 48, 190, 0, 0, 0, 178, 36, 211, 86, 190, 72, 221, 86, 63, 180, 121, 14, 191, 0, 0, 128, 178, 206, 53, 143, 190, 238, 13, 110, 63, 224, 135, 45, 63, 0, 0, 0, 178, 188, 19, 113, 190, 184, 144, 110, 63, 0, 161, 26, 61, 0, 0, 0, 51, 209, 155, 43, 63, 61, 227, 126, 63, 104, 93, 79, 63, 0, 0, 32, 179, 195, 127, 94, 191, 68, 252, 118, 63, 48, 80, 73, 190, 0, 0, 64, 179, 43, 191, 116, 191, 106, 138, 124, 63, 192, 177, 6, 63, 0, 0, 0, 51, 89, 133, 55, 63, 129, 65, 127, 63, 104, 172, 143, 190, 0, 0, 0, 51, 204, 226, 62, 63, 135, 232, 219, 62, 248, 229, 72, 63, 0, 0, 0, 179, 249, 3, 42, 191, 161, 8, 216, 62, 248, 18, 28, 63, 0, 0, 0, 0, 224, 80, 82, 61, 74, 32, 212, 62, 240, 126, 214, 62, 0, 0, 64, 51, 165, 148, 117, 63, 143, 169, 179, 62, 212, 55, 23, 191, 0, 0, 32, 179, 43, 16, 78, 191, 32, 54, 88, 62, 144, 30, 119, 63, 0, 0, 128, 178, 146, 21, 175, 190, 61, 169, 78, 62, 240, 103, 215, 190, 0, 0, 0, 178, 232, 31, 81, 190, 176, 94, 130, 61, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63, 0, 0, 128, 63),
+"format": "RGBAFloat",
+"height": 2,
+"mipmaps": false,
+"width": 108
+}
+
+[sub_resource type="ImageTexture" id="ImageTexture_1r6y4"]
+image = SubResource("Image_s3lef")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m4u1x"]
+render_priority = 0
+shader = ExtResource("3_ki0k0")
+shader_parameter/_quantization = true
+shader_parameter/_steps_quantization = 5
+shader_parameter/_object_scale = 4.0
+shader_parameter/_object_size = 4.0
+shader_parameter/_only_on_wave_visibility = false
+shader_parameter/_start_falloff_visibility = 0.5
+shader_parameter/_end_falloff_visibility = 0.3
+shader_parameter/_time_multiplier_activation = 1.0
+shader_parameter/_distance_multiplier_activation = 1.0
+shader_parameter/_width_time_activation = 1.0
+shader_parameter/_enable_highlight_intersection = true
+shader_parameter/_width_highlight_intersection = 1.0
+shader_parameter/_noise_texture = ExtResource("4_ioy8y")
+shader_parameter/_speed_noise = Vector2(0.02, 0.02)
+shader_parameter/_origin_generate = Vector3(0, 0.5, 0)
+shader_parameter/_relative_origin_generate = true
+shader_parameter/_time_generate = 1.0
+shader_parameter/_thickness_generate = 0.25
+shader_parameter/_collapse = false
+shader_parameter/_color_shield = Color(0.26, 0.975, 1, 1)
+shader_parameter/_color_brightness_shield = 15.0
+shader_parameter/_intensity_shield = 3.0
+shader_parameter/glow_enabled = true
+shader_parameter/glow_strength = 10.0
+shader_parameter/_active_static = false
+shader_parameter/_origin_static = Vector3(0, 0, 0)
+shader_parameter/_speed_static = 0.1
+shader_parameter/_frequency_static = 80.0
+shader_parameter/_amplitude_static = 0.002
+shader_parameter/_normal_amplitude_static = 0.002
+shader_parameter/_effect_radius_static = 1.2
+shader_parameter/_active_static_offset_hl = true
+shader_parameter/_strength_static_offset_hl = 1.0
+shader_parameter/_intensity_static_offset_hl = 5.0
+shader_parameter/_relative_origin_static = true
+shader_parameter/_impact_texture = SubResource("ImageTexture_1r6y4")
+shader_parameter/max_impacts = 108
+shader_parameter/_frequency_impact = 20.0
+shader_parameter/_waves_impact = 1.0
+shader_parameter/_fade_waves_impact = 2.0
+shader_parameter/_amplitude_impact = 0.02
+shader_parameter/_normal_amplitude_impact = 0.05
+shader_parameter/_radius_impact = 1.0
+shader_parameter/_active_impact_offset_hl = true
+shader_parameter/_strength_impact_offset_hl = 1.0
+shader_parameter/_intensity_impact_offset_hl = 5.0
+shader_parameter/_relative_origin_impact = true
+shader_parameter/_active_border = true
+shader_parameter/_intensity_border = 2.0
+shader_parameter/_percentage_border = 0.1
+shader_parameter/_show_normals = false
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ftut7"]
+resource_local_to_scene = true
+material = SubResource("ShaderMaterial_m4u1x")
+size = Vector2(1, 1)
+subdivide_width = 256
+subdivide_depth = 256
+
+[sub_resource type="Curve" id="Curve_tkmln"]
+resource_local_to_scene = true
+resource_name = "animation_curve"
+_data = [Vector2(0, 0), 0.0, 2.60088, 0, 0, Vector2(0.996183, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[node name="EnergyShieldExamples" type="Node3D"]
+
+[node name="WorldEnv" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_nl0ma")
+
+[node name="MainLight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.925871, -0.32722, 0.18892, 0, 0.5, 0.866025, -0.377841, -0.801827, 0.462935, 0, 10, 0)
+light_energy = 0.2
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.951428, 0.307871, 0, -0.307871, 0.951428, 0, 0.797, 1.867)
+script = ExtResource("1_l31ql")
+
+[node name="TouchWaveExample" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, 0)
+script = SubResource("GDScript_iiy7r")
+
+[node name="Heading" type="Label3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, -30, -0.0775828, 0.61109)
+pixel_size = 0.003
+modulate = Color(1, 0.763636, 0, 1)
+text = "SIZE OF IMPACTS"
+font_size = 40
+
+[node name="Description" type="Label3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, -30, -0.138092, 0.671599)
+pixel_size = 0.003
+text = "The frequence of amplitude are based on the size of the object that hits the shield."
+vertical_alignment = 0
+autowrap_mode = 3
+width = 640.0
+
+[node name="Ground" type="MeshInstance3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0, 0)
+mesh = SubResource("QuadMesh_f5biq")
+
+[node name="Ground2" type="MeshInstance3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 0, 0)
+mesh = SubResource("QuadMesh_f5biq")
+
+[node name="ShieldPlane" parent="TouchWaveExample" instance=ExtResource("6_4741m")]
+transform = Transform3D(4, 0, 0, 0, -1.7484555e-07, -4, 0, 4, -1.7484555e-07, -30.063118, 2.036953, -0.3245566)
+mesh = SubResource("PlaneMesh_m4u1x")
+script = SubResource("GDScript_ok5g2")
+animation_curve = SubResource("Curve_ftut7")
+shield_origin = Vector3(0, 0.5, 0)
+body_shape_entered_impact = true
+sustained_touch_effects = true
+relative_impact_position = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0.77337617, -0.34158024)
+mesh = SubResource("BoxMesh_ftut7")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="TouchWaveExample/MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TouchWaveExample/MeshInstance3D/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_m4u1x")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.878822, 0.77337617, -0.34158024)
+mesh = SubResource("BoxMesh_ftut7")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="TouchWaveExample/MeshInstance3D5"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TouchWaveExample/MeshInstance3D5/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_m4u1x")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.034252, 1.4891255, 0.8735239)
+mesh = SubResource("BoxMesh_ftut7")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="TouchWaveExample/MeshInstance3D6"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TouchWaveExample/MeshInstance3D6/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_m4u1x")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.109932, 1.4891255, 0.7618235)
+mesh = SubResource("BoxMesh_ftut7")
+metadata/_edit_group_ = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="TouchWaveExample/MeshInstance3D7"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TouchWaveExample/MeshInstance3D7/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_m4u1x")
+
+[node name="MeshInstance3D10" type="MeshInstance3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.483913, 0.6312996, 0.45671052)
+mesh = SubResource("BoxMesh_ftut7")
+metadata/_edit_group_ = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="TouchWaveExample/MeshInstance3D10"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TouchWaveExample/MeshInstance3D10/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_m4u1x")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.2161, 2.2992122, -0.34158024)
+mesh = SubResource("BoxMesh_tkmln")
+metadata/_edit_group_ = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="TouchWaveExample/MeshInstance3D2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TouchWaveExample/MeshInstance3D2/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_ukj8r")
+
+[node name="MeshInstance3D8" type="MeshInstance3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.388897, 2.2992122, -0.34158024)
+mesh = SubResource("BoxMesh_tkmln")
+metadata/_edit_group_ = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="TouchWaveExample/MeshInstance3D8"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TouchWaveExample/MeshInstance3D8/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_ukj8r")
+
+[node name="MeshInstance3D9" type="MeshInstance3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.312874, 2.299212, 0.6885712)
+mesh = SubResource("BoxMesh_tkmln")
+metadata/_edit_group_ = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="TouchWaveExample/MeshInstance3D9"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TouchWaveExample/MeshInstance3D9/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_ukj8r")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.42421, 3.0100214, -0.5768346)
+mesh = SubResource("SphereMesh_ebi6u")
+
+[node name="RigidBody3D" type="StaticBody3D" parent="TouchWaveExample/MeshInstance3D3"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TouchWaveExample/MeshInstance3D3/RigidBody3D"]
+shape = SubResource("SphereShape3D_ok5g2")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.613361, 3.0100214, -0.5768346)
+mesh = SubResource("SphereMesh_ebi6u")
+
+[node name="RigidBody3D" type="StaticBody3D" parent="TouchWaveExample/MeshInstance3D4"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TouchWaveExample/MeshInstance3D4/RigidBody3D"]
+shape = SubResource("SphereShape3D_ok5g2")
+
+[node name="MeshInstance3D11" type="MeshInstance3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.878822, 0.77337617, -5.3456926)
+mesh = SubResource("BoxMesh_ftut7")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="TouchWaveExample/MeshInstance3D11"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TouchWaveExample/MeshInstance3D11/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_m4u1x")
+
+[node name="MeshInstance3D12" type="MeshInstance3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.034252, 1.4891255, -4.1796255)
+mesh = SubResource("BoxMesh_ftut7")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="TouchWaveExample/MeshInstance3D12"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TouchWaveExample/MeshInstance3D12/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_m4u1x")
+
+[node name="MeshInstance3D13" type="MeshInstance3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.109932, 1.4891255, -4.2422886)
+mesh = SubResource("BoxMesh_ftut7")
+metadata/_edit_group_ = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="TouchWaveExample/MeshInstance3D13"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TouchWaveExample/MeshInstance3D13/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_m4u1x")
+
+[node name="MeshInstance3D14" type="MeshInstance3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.388897, 2.2992122, -5.3456926)
+mesh = SubResource("BoxMesh_tkmln")
+metadata/_edit_group_ = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="TouchWaveExample/MeshInstance3D14"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TouchWaveExample/MeshInstance3D14/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_ukj8r")
+
+[node name="MeshInstance3D15" type="MeshInstance3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.312874, 2.299212, -4.3155413)
+mesh = SubResource("BoxMesh_tkmln")
+metadata/_edit_group_ = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="TouchWaveExample/MeshInstance3D15"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TouchWaveExample/MeshInstance3D15/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_ukj8r")
+
+[node name="MeshInstance3D16" type="MeshInstance3D" parent="TouchWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.613361, 3.0100214, -5.580947)
+mesh = SubResource("SphereMesh_ebi6u")
+
+[node name="RigidBody3D" type="StaticBody3D" parent="TouchWaveExample/MeshInstance3D16"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TouchWaveExample/MeshInstance3D16/RigidBody3D"]
+shape = SubResource("SphereShape3D_ok5g2")
+
+[node name="ShieldSphere" parent="TouchWaveExample" instance=ExtResource("5_7nqdb")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -25.73648, 1.7235548, -0.5892613)
+mesh = SubResource("SphereMesh_ukj8r")
+script = SubResource("GDScript_ukj8r")
+animation_curve = SubResource("Curve_65qv3")
+body_shape_entered_impact = true
+sustained_touch_effects = true
+relative_impact_position = true
+
+[node name="ShieldSphere2" parent="TouchWaveExample" instance=ExtResource("5_7nqdb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.640293, 1.4820731, -5.6317677)
+mesh = SubResource("SphereMesh_65qv3")
+script = SubResource("GDScript_xrw65")
+animation_curve = SubResource("Curve_ahtcd")
+body_shape_entered_impact = true
+sustained_touch_effects = true
+
+[node name="CollisionShape3D" parent="TouchWaveExample/ShieldSphere2/Area3D" index="0"]
+shape = SubResource("SphereShape3D_ukj8r")
+
+[node name="PersistanceWaveExample" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0, 0)
+script = SubResource("GDScript_ftut7")
+
+[node name="Heading" type="Label3D" parent="PersistanceWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, -30, -0.0775828, 0.61109)
+pixel_size = 0.003
+modulate = Color(1, 0.763636, 0, 1)
+text = "WAVES UPDATE"
+font_size = 40
+
+[node name="Description" type="Label3D" parent="PersistanceWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, -30, -0.138092, 0.671599)
+pixel_size = 0.003
+text = "When an object is still touching the shield the waves update.
+"
+vertical_alignment = 0
+autowrap_mode = 3
+width = 700.0
+
+[node name="Ground" type="MeshInstance3D" parent="PersistanceWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0, 0)
+mesh = SubResource("QuadMesh_f5biq")
+
+[node name="ShieldSphere" parent="PersistanceWaveExample" instance=ExtResource("5_7nqdb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.25, 0.6, 0)
+mesh = SubResource("SphereMesh_ftut7")
+animation_curve = SubResource("Curve_m4u1x")
+body_shape_entered_impact = true
+sustained_touch_effects = true
+relative_impact_position = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PersistanceWaveExample/ShieldSphere"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.46717834, 0, 0)
+mesh = SubResource("SphereMesh_m4u1x")
+skeleton = NodePath("../../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="PersistanceWaveExample/ShieldSphere/MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PersistanceWaveExample/ShieldSphere/MeshInstance3D/StaticBody3D"]
+shape = SubResource("SphereShape3D_tkmln")
+
+[node name="ShieldPlane" parent="PersistanceWaveExample" instance=ExtResource("2_8awbq")]
+transform = Transform3D(-1.0502911, 0.1443969, -6.316446e-09, 0, -4.37114e-08, -1, -0.1443969, -1.0502911, 4.5972918e-08, -30.750027, 0.6024786, -0.00084102154)
+mesh = SubResource("PlaneMesh_tkmln")
+animation_curve = SubResource("Curve_ukj8r")
+body_shape_entered_impact = true
+sustained_touch_effects = true
+relative_impact_position = true
+
+[node name="EnvironmentSphere" type="MeshInstance3D" parent="PersistanceWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.5, 0.6, -0.126896)
+mesh = SubResource("SphereMesh_7cs7f")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="PersistanceWaveExample/EnvironmentSphere"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PersistanceWaveExample/EnvironmentSphere/StaticBody3D"]
+shape = SubResource("SphereShape3D_ftut7")
+
+[node name="EnvironmentCube" type="MeshInstance3D" parent="PersistanceWaveExample"]
+transform = Transform3D(0.8988938, 0.2727654, 0.342913, 0, 0.782608, -0.622515, -0.43816736, 0.55957425, 0.7034809, -31.07269, 0.6, 0.16005987)
+mesh = SubResource("BoxMesh_qsywp")
+skeleton = NodePath("../EnvironmentSphere")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="PersistanceWaveExample/EnvironmentCube"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PersistanceWaveExample/EnvironmentCube/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_65qv3")
+
+[node name="EnvironmentMovingPlatform" type="MeshInstance3D" parent="PersistanceWaveExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.25, 1.1047462, 0)
+mesh = SubResource("BoxMesh_8tyb0")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="PersistanceWaveExample/EnvironmentMovingPlatform"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PersistanceWaveExample/EnvironmentMovingPlatform/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00079345703, -0.0011291504, 0)
+shape = SubResource("BoxShape3D_ftut7")
+
+[node name="WaveAmountExample" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45, 0, 0)
+script = SubResource("GDScript_iiy7r")
+
+[node name="Heading" type="Label3D" parent="WaveAmountExample"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, -30, -0.0775828, 0.61109)
+pixel_size = 0.003
+modulate = Color(1, 0.763636, 0, 1)
+text = "NUMBER OF WAVES
+"
+font_size = 40
+
+[node name="Description" type="Label3D" parent="WaveAmountExample"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, -30, -0.138092, 0.671599)
+pixel_size = 0.003
+text = "The amount of ripples being processed is Dynamic."
+vertical_alignment = 0
+autowrap_mode = 3
+width = 640.0
+
+[node name="Ground" type="MeshInstance3D" parent="WaveAmountExample"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0, 0)
+mesh = SubResource("QuadMesh_f5biq")
+
+[node name="Rain Creator" type="Node3D" parent="WaveAmountExample" node_paths=PackedStringArray("plane_node")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5489197, 2.1667295, 2.15959)
+script = SubResource("GDScript_ebi6u")
+plane_node = NodePath("../ShieldPlane")
+drops_in_burst = 12
+
+[node name="ShieldPlane" parent="WaveAmountExample" instance=ExtResource("6_4741m")]
+transform = Transform3D(4, 0, 0, 0, -1.7484555e-07, -4, 0, 4, -1.7484555e-07, -30.062206, 2.0562174, -0.32653594)
+mesh = SubResource("PlaneMesh_ftut7")
+script = SubResource("GDScript_ok5g2")
+animation_curve = SubResource("Curve_tkmln")
+shield_origin = Vector3(0, 0.5, 0)
+speed_impact_effect = false
+relative_impact_position = true
+
+[editable path="TouchWaveExample/ShieldSphere2"]
